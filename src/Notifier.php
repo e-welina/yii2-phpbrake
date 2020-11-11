@@ -19,7 +19,8 @@ class Notifier extends AirbrakeNotifier
     private function newHTTPClient()
     {
         if (isset($this->opt['httpClient'])) {
-            if ($this->opt['httpClient'] instanceof GuzzleHttp\ClientInterface) {
+            if ($this->opt['httpClient'] instanceof GuzzleHttp\ClientInterface
+                && $this->checkClientVerificationOption($this->opt['httpClient'])) {
                 return $this->opt['httpClient'];
             }
             throw new Exception('phpbrake: httpClient must implement GuzzleHttp\ClientInterface');
@@ -30,6 +31,13 @@ class Notifier extends AirbrakeNotifier
             'timeout' => 5,
             'verify' => false
         ]);
+    }
+    
+    private function checkClientVerificationOption($client){
+        if ($client->getConfig('verification')==true)
+            return false;
+        return true;
+        
     }
     public function buildNotice($exc)
     {
