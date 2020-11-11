@@ -85,8 +85,7 @@ class AirbrakeService extends Component
             'appVersion' => $this->appVersion,
             'environment' => $this->environment,
             'rootDirectory' => Yii::getAlias($this->rootDirectory),
-            'host' => $this->host,
-            'httpClient' => $this->httpClient,
+            'host' => $this->host
         ]);
 
         if (is_array($this->filters)) {
