@@ -4,7 +4,6 @@ namespace biller\phpbrake;
 
 use Airbrake\Notifier as AirbrakeNotifier;
 use GuzzleHttp\Client;
-use GuzzleHttp\Promise\Promise;
 use Yii;
 
 class Notifier extends AirbrakeNotifier
@@ -18,23 +17,25 @@ class Notifier extends AirbrakeNotifier
 
     private function newHTTPClient()
     {
-        /*if (isset($this->opt['httpClient'])) {
+        if (isset($this->opt['httpClient'])) {
             if ($this->opt['httpClient'] instanceof GuzzleHttp\ClientInterface
                 && $this->checkClientVerificationOption($this->opt['httpClient'])) {
                 return $this->opt['httpClient'];
             }
             throw new Exception('phpbrake: httpClient must implement GuzzleHttp\ClientInterface');
-        }*/
+        }
+        
         return new Client([
             'connect_timeout' => 5,
             'read_timeout' => 5,
             'timeout' => 5,
             'verify' => false
         ]);
+       
     }
     
     private function checkClientVerificationOption($client){
-        if ($client->getConfig('verification')==true)
+        if ($client->getConfig('verify') == true)
             return false;
         return true;
         
