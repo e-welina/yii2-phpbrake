@@ -1,6 +1,7 @@
 # yii2-airbrake
 Airbrake integration for Yii2, which wraps around official
 [Airbrake PHP library (airbrake/phpbrake)](https://github.com/airbrake/phpbrake).
+Http client with no verifiation added.
 
 ## Installation
     composer require biller/yii2-airbrake
