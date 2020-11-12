@@ -8,23 +8,21 @@ use Yii;
 
 class Notifier extends AirbrakeNotifier
 {
+    private $httpClient;
    
     public function __construct($opt)
     {
         parent::__construct($opt);
         $this->httpClient = $this->newHTTPClient();
+        
+    }
+    
+    public function getClient(){
+        return $this->httpClient;
     }
 
     private function newHTTPClient()
     {
-        if (isset($this->opt['httpClient'])) {
-            if ($this->opt['httpClient'] instanceof GuzzleHttp\ClientInterface
-                && $this->checkClientVerificationOption($this->opt['httpClient'])) {
-                return $this->opt['httpClient'];
-            }
-            throw new Exception('phpbrake: httpClient must implement GuzzleHttp\ClientInterface');
-        }
-        
         return new Client([
             'connect_timeout' => 5,
             'read_timeout' => 5,
@@ -34,12 +32,7 @@ class Notifier extends AirbrakeNotifier
        
     }
     
-    private function checkClientVerificationOption($client){
-        if ($client->getConfig('verify') == true)
-            return false;
-        return true;
-        
-    }
+    
     public function buildNotice($exc)
     {
         $notice = parent::buildNotice($exc);

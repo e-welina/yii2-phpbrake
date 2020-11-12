@@ -5,7 +5,6 @@ namespace biller\phpbrake;
 use Airbrake\ErrorHandler;
 use Airbrake\Errors\Base;
 use Airbrake\Exception;
-use Airbrake\Http\Factory;
 use Airbrake\Instance;
 use Throwable;
 use Yii;
@@ -15,10 +14,7 @@ use yii\base\InvalidArgumentException;
 class AirbrakeService extends Component
 {
 
-    const CLIENT_DEFAULT = 'default';
-    const CLIENT_GUZZLE = 'guzzle';
-    const CLIENT_CURL = 'curl';
-
+   
     /** @var bool Enabled flag to allow simpler configuration */
     public $enabled = true;
 
@@ -43,9 +39,7 @@ class AirbrakeService extends Component
     /** @var string Service server host */
     public $host = 'api.airbrake.io';
 
-    /** @var string HTTP client to use */
-    public $httpClient;
-
+  
     /** @var bool If true, global instance is set on init() */
     public $setGlobalInstance = true;
 
@@ -85,8 +79,7 @@ class AirbrakeService extends Component
             'appVersion' => $this->appVersion,
             'environment' => $this->environment,
             'rootDirectory' => Yii::getAlias($this->rootDirectory),
-            'host' => $this->host,
-            'httpClient' => $this->httpClient,
+            'host' => $this->host
         ]);
 
         if (is_array($this->filters)) {
@@ -182,7 +175,7 @@ class AirbrakeService extends Component
      */
     public function trackDeploy($revision, $username = 'system', $repository = null)
     {
-        $client = Factory::createHttpClient($this->httpClient);
+        $client = $this->_notifier->getClient();
         $url = sprintf('%s/projects/%s/deploys?key=%s', $this->getAirbrakeApiUrl(), $this->projectId, $this->projectKey);
 
         $result = $client->send($url, json_encode([
